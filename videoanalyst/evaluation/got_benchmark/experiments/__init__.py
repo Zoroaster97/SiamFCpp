@@ -9,9 +9,10 @@ from .tcolor128 import ExperimentTColor128
 from .trackingnet import ExperimentTrackingNet
 from .uav123 import ExperimentUAV123
 from .vot import ExperimentVOT
+from .camdata import ExperimentCamData
 
 __all__ = [
     ExperimentGOT10k, ExperimentOTB, ExperimentVOT, ExperimentDTB70,
     ExperimentUAV123, ExperimentNfS, ExperimentTColor128, ExperimentLaSOT,
-    ExperimentTrackingNet
+    ExperimentTrackingNet, ExperimentCamData
 ]

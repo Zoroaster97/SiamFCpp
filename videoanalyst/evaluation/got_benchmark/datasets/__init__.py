@@ -10,8 +10,9 @@ from .trackingnet import TrackingNet
 from .uav123 import UAV123
 from .vid import ImageNetVID
 from .vot import VOT
+from .camdata import CamData
 
 __all__ = [
     GOT10k, OTB, VOT, DTB70, TColor128, UAV123, NfS, LaSOT, TrackingNet,
-    ImageNetVID
+    ImageNetVID, CamData
 ]
