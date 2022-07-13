@@ -13,7 +13,7 @@ from ..transformer.builder import build as build_transformer
 from .datapipeline_base import TASK_DATAPIPELINES, DatapipelineBase
 
 
-def build(task: str, cfg: CfgNode, seed: int = 0) -> DatapipelineBase:
+def build(task: str, cfg: CfgNode, seed: int = 0, k_idx=None) -> DatapipelineBase:
     r"""
     Arguments
     ---------
@@ -27,7 +27,7 @@ def build(task: str, cfg: CfgNode, seed: int = 0) -> DatapipelineBase:
     assert task in TASK_DATAPIPELINES, "invalid task name"
     MODULES = TASK_DATAPIPELINES[task]
 
-    sampler = build_sampler(task, cfg.sampler, seed=seed)
+    sampler = build_sampler(task, cfg.sampler, seed=seed, k_idx=k_idx)
     transformers = build_transformer(task, cfg.transformer, seed=seed)
     target = build_target(task, cfg.target)
 

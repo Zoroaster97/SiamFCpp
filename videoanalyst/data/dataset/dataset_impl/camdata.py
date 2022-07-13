@@ -25,14 +25,14 @@ class CamDataDataset(DatasetBase):
         if check integrity of dataset or not
     """
     default_hyper_params = dict(
-        dataset_root="datasets/LaSOT",
+        dataset_root="datasets/CamData",
         subset="train",
         ratio=1.0,
         max_diff=100,
         check_integrity=True,
     )
 
-    def __init__(self) -> None:
+    def __init__(self, k_idx=None) -> None:
         r"""
         Create dataset with config
 
@@ -43,6 +43,7 @@ class CamDataDataset(DatasetBase):
         """
         super().__init__()
         self._state["dataset"] = None
+        self.k_idx = k_idx
 
     def update_params(self):
         r"""
@@ -53,7 +54,8 @@ class CamDataDataset(DatasetBase):
         check_integrity = self._hyper_params["check_integrity"]
         self._state["dataset"] = CamData(dataset_root,
                                        subset=subset,
-                                       check_integrity=check_integrity)
+                                       check_integrity=check_integrity,
+                                       k_idx=self.k_idx)
 
     def __getitem__(self, item: int) -> Dict:
         img_files, anno = self._state["dataset"][item]

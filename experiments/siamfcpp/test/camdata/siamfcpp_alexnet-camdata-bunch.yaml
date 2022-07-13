@@ -1,6 +1,8 @@
 test:
   track:
-    exp_name: &TEST_NAME "camdata-test3-k1-ep*"
+    # exp_name: &TEST_NAME "camdata-test3-k1-ep*"
+    # exp_name: &TEST_NAME "camdata-test5-kx-ep*"
+    exp_name: &TEST_NAME "s5k2-ep*"
     exp_save: &TEST_SAVE "logs"
     model:
       backbone:
@@ -20,7 +22,9 @@ test:
       task_model:
         name: "SiamTrack"
         SiamTrack:
-          pretrain_model_path: "snapshots/siamfcpp_alexnet-camdata3-k1/epoch-*.pkl"
+          # pretrain_model_path: "snapshots/siamfcpp_alexnet-camdata3-k1/epoch-*.pkl"
+          # pretrain_model_path: "snapshots/siamfcpp_alexnet-camdata5/epoch-*.pkl"
+          pretrain_model_path: "snapshots/s5k2/epoch-*.pkl"
     pipeline:
       name: "SiamFCppTracker"
       SiamFCppTracker:
@@ -35,7 +39,6 @@ test:
     tester:
       names: ["CamDataTester",]
       CamDataTester:
-        # exp_name: "camdata-test2-k1-ep*"
         exp_name: *TEST_NAME
         exp_save: *TEST_SAVE
         device_num: 1

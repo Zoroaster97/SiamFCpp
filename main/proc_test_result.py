@@ -3,7 +3,6 @@
 import argparse
 import os
 import json
-import matplotlib.pyplot as plt
 
 
 def make_parser():
@@ -26,9 +25,14 @@ if __name__ == '__main__':
     all_precision_score = []
     all_normalized_precision_score = []
     all_success_rate = []
-    all_speed_fps = []
     json_file = parsed_args.json
-    txt_file = os.path.join(os.path.dirname(json_file), 'performance_each_sample.txt')
+    txt_file = os.path.join(os.path.dirname(json_file), 'performance.txt')
+
+    x_set = [1, 4, 11, 15]
+    x_success_score, y_success_score = [], []
+    x_precision_score, y_precision_score = [], []
+    x_normalized_precision_score, y_normalized_precision_score = [], []
+    x_success_rate, y_success_rate = [], []
    
     with open(json_file,'r') as jf:
         data = json.load(jf)
@@ -39,19 +43,42 @@ if __name__ == '__main__':
             precision_score = data[exp_name]['seq_wise']['person-{}'.format(i)]['precision_score']
             normalized_precision_score = data[exp_name]['seq_wise']['person-{}'.format(i)]['normalized_precision_score']
             success_rate = data[exp_name]['seq_wise']['person-{}'.format(i)]['success_rate']
-            speed_fps = data[exp_name]['seq_wise']['person-{}'.format(i)]['speed_fps']
+            # speed_fps = data[exp_name]['seq_wise']['person-{}'.format(i)]['speed_fps']
             all_success_score.append(success_score)
             all_precision_score.append(precision_score)
             all_normalized_precision_score.append(normalized_precision_score)
             all_success_rate.append(success_rate)
-            all_speed_fps.append(speed_fps)
+            if i in x_set:
+                x_success_score.append(success_score)
+                x_precision_score.append(precision_score)
+                x_normalized_precision_score.append(normalized_precision_score)
+                x_success_rate.append(success_rate)
+            else:
+                y_success_score.append(success_score)
+                y_precision_score.append(precision_score)
+                y_normalized_precision_score.append(normalized_precision_score)
+                y_success_rate.append(success_rate)
     
     with open(txt_file, 'w') as f:
+        f.writelines('########\noverall\n'
+                    + 'success_score: ' + str(sum(all_success_score) / 20) + '\n'
+                    + 'precision_score: ' + str(sum(all_precision_score) / 20) + '\n'
+                    + 'normalized_precision_score: ' + str(sum(all_normalized_precision_score) / 20) + '\n'
+                    + 'success_rate: ' + str(sum(all_success_rate) / 20) + '\n')
+        f.writelines('########\nperson-x\n'
+                    + 'success_score: ' + str(sum(x_success_score) / 4) + '\n'
+                    + 'precision_score: ' + str(sum(x_precision_score) / 4) + '\n'
+                    + 'normalized_precision_score: ' + str(sum(x_normalized_precision_score) / 4) + '\n'
+                    + 'success_rate: ' + str(sum(x_success_rate) / 4) + '\n')
+        f.writelines('########\nperson-y\n'
+                    + 'success_score: ' + str(sum(y_success_score) / 16) + '\n'
+                    + 'precision_score: ' + str(sum(y_precision_score) / 16) + '\n'
+                    + 'normalized_precision_score: ' + str(sum(y_normalized_precision_score) / 16) + '\n'
+                    + 'success_rate: ' + str(sum(y_success_rate) / 16) + '\n')
         for i in range(20):
             f.writelines('########\nperson-{}\n'.format(i + 1)
-                        +'success_score: ' + str(all_success_score[i]) + '\n'
-                        +'precision_score: '+str(all_precision_score[i]) + '\n'
-                        +'normalized_precision_score: '+str(all_normalized_precision_score[i])+'\n'
-                        +'success_rate: '+str(all_success_rate[i])+'\n'
-                        +'speed_fps: '+str(all_speed_fps[i])+'\n')
+                        + 'success_score: ' + str(all_success_score[i]) + '\n'
+                        + 'precision_score: ' + str(all_precision_score[i]) + '\n'
+                        + 'normalized_precision_score: ' + str(all_normalized_precision_score[i]) + '\n'
+                        + 'success_rate: ' + str(all_success_rate[i]) + '\n')
 

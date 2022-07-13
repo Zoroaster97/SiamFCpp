@@ -11,7 +11,7 @@ from ..filter import builder as filter_builder
 from .sampler_base import TASK_SAMPLERS, DatasetBase
 
 
-def build(task: str, cfg: CfgNode, seed: int = 0) -> DatasetBase:
+def build(task: str, cfg: CfgNode, seed: int = 0, k_idx=None) -> DatasetBase:
     r"""
     Arguments
     ---------
@@ -28,7 +28,7 @@ def build(task: str, cfg: CfgNode, seed: int = 0) -> DatasetBase:
     submodules_cfg = cfg.submodules
 
     dataset_cfg = submodules_cfg.dataset
-    datasets = dataset_builder.build(task, dataset_cfg)
+    datasets = dataset_builder.build(task, dataset_cfg, k_idx=k_idx)
 
     if submodules_cfg.filter.name != "":
         filter_cfg = submodules_cfg.filter

@@ -9,6 +9,7 @@ from typing import Dict
 import numpy as np
 from loguru import logger
 from tqdm import tqdm
+# import pdb
 
 _VALID_SUBSETS = ['train', 'test']
 
@@ -29,10 +30,12 @@ class CamData(object):
                  return_meta=False,
                  check_integrity=True,
                  cache_path=None,
-                 ignore_cache=False):
+                 ignore_cache=False,
+                 k_idx=None):
         super(CamData, self).__init__()
         subset = subset.split('_')
         assert set(subset).issubset({'train', 'test'}), 'Unknown subset.'
+        CamData.data_dict = {subset: dict() for subset in _VALID_SUBSETS}
 
         self.root_dir = root_dir
         self.subset = subset
@@ -40,6 +43,8 @@ class CamData(object):
         # check seems useless, disabled
         # if check_integrity:
         #     self._check_integrity(root_dir)
+        if k_idx is not None and cache_path is not None:
+            cache_path = cache_path.replace('.pkl', '-k{}.pkl'.format(str(k_idx)))
         self.cache_path = cache_path
         self.ignore_cache = ignore_cache
 
@@ -53,7 +58,10 @@ class CamData(object):
         ]
 
         # load subset sequence names
-        split_file = os.path.join(os.path.dirname(__file__), 'camdata.json')
+        if k_idx is None:
+            split_file = os.path.join(os.path.dirname(__file__), 'camdata.json')
+        else:
+            split_file = os.path.join(os.path.dirname(__file__), 'camdata_k{}.json'.format(str(k_idx)))
         with open(split_file, 'r') as f:
             splits = json.load(f)
         self.splits = splits
@@ -70,7 +78,7 @@ class CamData(object):
         # self.anno_files = [os.path.join(
         #     os.path.dirname(d), 'groundtruth.txt')
         #     for d in self.seq_dirs]
-        self._ensure_cache()
+        self._ensure_cache(k_idx=k_idx)
         self.seq_names = [
             k for subset in self.subset
             for k, _ in CamData.data_dict[subset].items()
@@ -81,6 +89,7 @@ class CamData(object):
             for subset in self.subset
             for k, v in CamData.data_dict[subset].items()
         }
+        # pdb.set_trace()
 
     def __getitem__(self, index):
         r"""        
@@ -148,7 +157,7 @@ class CamData(object):
 
         return meta
 
-    def _ensure_cache(self):
+    def _ensure_cache(self, k_idx=None):
         """Perform all overheads related to cache (building/loading/check)
         """
         # check if subset cache already exists in CamData.data_dict and is valid w.r.t. list.txt
@@ -156,7 +165,7 @@ class CamData(object):
             return
 
         # load subset cache into CamData.data_dict
-        cache_path = self._get_cache_path(cache_path=self.cache_path)
+        cache_path = self._get_cache_path(cache_path=self.cache_path, k_idx=k_idx)
         self.cache_path = cache_path
         if all([os.path.isfile(p)
                 for p in self.cache_path.values()]) and not self.ignore_cache:
@@ -183,7 +192,7 @@ class CamData(object):
             "{}: consider cleaning this cache file in case of erros such as FileNotFoundError or IOError"
             .format(CamData.__name__))
 
-    def _get_cache_path(self, cache_path: Dict[str, str] = None):
+    def _get_cache_path(self, cache_path: Dict[str, str] = None, k_idx=None):
         r"""Ensure cache_path.
             If cache_path does not exist, turn to default set: root_dir/subset.pkl.
         """
@@ -192,8 +201,9 @@ class CamData(object):
             logger.info(
                 "{}: passed cache file {} invalid, change to default cache path"
                 .format(CamData.__name__, cache_path))
+            subset_pkl = '-k{}.pkl'.format(str(k_idx)) if k_idx is not None else '.pkl'
             cache_path = {
-                subset: os.path.join(self.root_dir, subset + ".pkl")
+                subset: os.path.join(self.root_dir, subset + subset_pkl)
                 for subset in self.subset
             }
         return cache_path
@@ -201,6 +211,7 @@ class CamData(object):
     def _check_cache_for_current_subset(self) -> bool:
         r""" check if CamData.data_dict[subset] exists and contains all record in seq_names
         """
+        # pdb.set_trace()
         is_valid_data_dict = all([subset in CamData.data_dict for subset in self.subset]) and \
                              (set([seq_name for subset in self.subset for seq_name in CamData.data_dict[subset].keys()]) == set(self.seq_names))
         return is_valid_data_dict
@@ -220,12 +231,14 @@ class CamData(object):
                 CamData.data_dict[s][seq_name] = dict(img_files=img_files,
                                                     anno=anno,
                                                     meta=meta)
+            # pdb.set_trace()
             with open(self.cache_path[s], "wb") as f:
                 pickle.dump(CamData.data_dict[s], f)
             logger.info("{}: dump cache file to {}".format(
                 CamData.__name__, self.cache_path[s]))
 
     def _load_cache_for_current_subset(self, cache_path: Dict[str, str]):
+        # pdb.set_trace()
         for subset in self.subset:
             assert os.path.exists(
                 cache_path[subset]
@@ -234,6 +247,7 @@ class CamData(object):
                 CamData.data_dict[subset] = pickle.load(f)
             logger.info("{}: loaded cache file {}".format(
                 CamData.__name__, cache_path[subset]))
+        # pdb.set_trace()
 
     def load_single_sequence(self, seq_dir):
         img_files = sorted(glob.glob(os.path.join(seq_dir, 'img/*.jpg')))

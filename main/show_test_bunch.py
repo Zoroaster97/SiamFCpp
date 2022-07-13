@@ -38,12 +38,11 @@ if __name__ == '__main__':
     all_precision_score = []
     all_normalized_precision_score = []
     all_success_rate = []
-    save_dir = os.path.dirname(parsed_args.report_dirs)
+    save_file_name = os.path.dirname(parsed_args.report_dirs) + '.png'
     for i in range(parsed_args.start, parsed_args.end):
         report_dir = parsed_args.report_dirs.replace('*', str(i))
         assert os.path.exists(report_dir), \
-            'No reports found. Run "report" first' \
-            'before plotting curves.'
+            'No reports dir found: {}'.format(report_dir)
         report_file = os.path.join(report_dir, 'performance.json')
         assert os.path.exists(report_file), \
             'No reports found. Run "report" first' \
@@ -70,6 +69,7 @@ if __name__ == '__main__':
     plt.plot(all_normalized_precision_score, label="normalized_precision_score")
     plt.plot(all_success_rate, label="success_rate")
     plt.legend()
+    plt.savefig(save_file_name, dpi=300)
     plt.show()
     
 

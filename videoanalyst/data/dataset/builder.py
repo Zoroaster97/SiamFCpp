@@ -9,7 +9,7 @@ from videoanalyst.utils import merge_cfg_into_hps
 from .dataset_base import TASK_DATASETS, DatasetBase
 
 
-def build(task: str, cfg: CfgNode) -> DatasetBase:
+def build(task: str, cfg: CfgNode, k_idx=None) -> DatasetBase:
     r"""
     Arguments
     ---------
@@ -24,7 +24,7 @@ def build(task: str, cfg: CfgNode) -> DatasetBase:
     names = cfg.names
     modules = []
     for name in names:
-        module = dataset_modules[name]()
+        module = dataset_modules[name](k_idx=k_idx)
         hps = module.get_hps()
         hps = merge_cfg_into_hps(cfg[name], hps)
         module.set_hps(hps)

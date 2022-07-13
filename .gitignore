@@ -75,3 +75,7 @@ venv
 debug
 *.txt
 PKG-INFO
+
+# released data
+/released_data
+*.zip
