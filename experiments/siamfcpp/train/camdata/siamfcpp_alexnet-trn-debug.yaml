@@ -1,9 +1,6 @@
 test:
   track:
-    # exp_name: &TEST_NAME "siamfcpp_alexnet-camdata5"
-    # exp_name: &TEST_NAME "siamfcpp_alexnet-camdata5-k2"
-    # exp_name: &TEST_NAME "s6k4-eval"
-    exp_name: &TEST_NAME "s7k4"
+    exp_name: &TEST_NAME "s6k4-debug"
     exp_save: &TEST_SAVE "logs"
     model:
       backbone:
@@ -24,8 +21,7 @@ test:
         name: "SiamTrack"
         SiamTrack:
           # pretrain_model_path: "snapshots/siamfcpp_alexnet-camdata5/epoch-0.pkl"
-          # pretrain_model_path: "snapshots/s6k4-eval/epoch-0.pkl"
-          pretrain_model_path: "snapshots/s7k4/epoch-0.pkl"
+          pretrain_model_path: "snapshots/s6k4-debug/epoch-0.pkl"
     pipeline:
       name: "SiamFCppTracker"
       SiamFCppTracker:
@@ -57,8 +53,7 @@ test:
 train:
   track:
     # exp_name: &TRAIN_NAME "siamfcpp_alexnet-camdata5"
-    # exp_name: &TRAIN_NAME "s6k4-eval"
-    exp_name: &TRAIN_NAME "s7k4"
+    exp_name: &TRAIN_NAME "s6k4-debug"
     exp_save: &TRAIN_SAVE "snapshots"
     num_processes: 1
     model:
@@ -99,20 +94,18 @@ train:
     data:
       exp_name: *TRAIN_NAME
       exp_save: *TRAIN_SAVE
-      num_epochs: &NUM_EPOCHS 5
+      num_epochs: &NUM_EPOCHS 1
       minibatch: &MINIBATCH 32  # 64
       # num_workers: 32
-      num_workers: 4
+      num_workers: 0
       nr_image_per_epoch: &NR_IMAGE_PER_EPOCH 280000 # 400000
-      # nr_image_per_epoch: &NR_IMAGE_PER_EPOCH 64000 # 280000 # 400000
       pin_memory: false
       datapipeline:
         name: "RegularDatapipeline"
       sampler:
         name: "TrackPairSampler"
         TrackPairSampler:
-          # negative_pair_ratio: 0.15 # 0.1
-          negative_pair_ratio: 0.0
+          negative_pair_ratio: 0.15 # 0.1
         submodules:
           dataset:
             names: ["CamDataDataset",]

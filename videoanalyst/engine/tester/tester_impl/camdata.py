@@ -45,7 +45,7 @@ class CamDataTester(TesterBase):
             all_devs = [torch.device("cpu")]
         self._state["all_devs"] = all_devs
 
-    def test(self, ):
+    def test(self, k_idx=None):
         tracker_name = self._hyper_params["exp_name"]
         all_devs = self._state["all_devs"]
         nr_devs = len(all_devs)
@@ -61,7 +61,8 @@ class CamDataTester(TesterBase):
             experiment = ExperimentCamData(root_dir,
                                          subset=subset,
                                          result_dir=result_dir,
-                                         report_dir=report_dir)
+                                         report_dir=report_dir,
+                                         k_idx=k_idx)
             # single worker
             if nr_devs == 1:
                 dev = all_devs[0]
@@ -77,7 +78,7 @@ class CamDataTester(TesterBase):
                                         slicing_step * (dev_id + 1))
                     proc = mp.Process(target=self.worker,
                                       args=(dev_id, dev, subset,
-                                            slicing_quantile))
+                                            slicing_quantile, k_idx))
                     proc.start()
                     procs.append(proc)
                 for p in procs:
@@ -94,7 +95,7 @@ class CamDataTester(TesterBase):
             test_result_dict["main_performance"] = -1
         return test_result_dict
 
-    def worker(self, dev_id, dev, subset, slicing_quantile):
+    def worker(self, dev_id, dev, subset, slicing_quantile, k_idx=None):
         logger.debug("Worker starts: slice {} at {}".format(
             slicing_quantile, dev))
         tracker_name = self._hyper_params["exp_name"]
@@ -112,7 +113,8 @@ class CamDataTester(TesterBase):
         experiment = ExperimentCamData(root_dir,
                                      subset=subset,
                                      result_dir=result_dir,
-                                     report_dir=report_dir)
+                                     report_dir=report_dir,
+                                     k_idx=k_idx)
         experiment.run(pipeline_tracker, slicing_quantile=slicing_quantile)
         logger.debug("Worker ends: slice {} at {}".format(
             slicing_quantile, dev))

@@ -31,9 +31,10 @@ class ExperimentCamData(ExperimentOTB):
                  subset='test',
                  return_meta=False,
                  result_dir='results',
-                 report_dir='reports'):
+                 report_dir='reports',
+                 k_idx=None):
         # assert subset.upper() in ['TRAIN', 'TEST']
-        self.dataset = CamData(root_dir, subset, return_meta=return_meta)
+        self.dataset = CamData(root_dir, subset, return_meta=return_meta, k_idx=k_idx)
         self.result_dir = os.path.join(result_dir, 'CamData')
         self.report_dir = os.path.join(report_dir, 'CamData')
 

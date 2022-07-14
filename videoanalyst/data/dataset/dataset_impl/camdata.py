@@ -4,6 +4,7 @@ from typing import Dict
 from videoanalyst.data.dataset.dataset_base import TRACK_DATASETS, DatasetBase
 from videoanalyst.evaluation.got_benchmark.datasets import CamData
 from videoanalyst.pipeline.utils.bbox import xywh2xyxy
+# import pdb
 
 
 @TRACK_DATASETS.register
@@ -62,6 +63,7 @@ class CamDataDataset(DatasetBase):
 
         anno = xywh2xyxy(anno)
         sequence_data = dict(image=img_files, anno=anno)
+        # pdb.set_trace()
 
         return sequence_data
 

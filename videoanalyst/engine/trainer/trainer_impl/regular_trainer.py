@@ -11,6 +11,7 @@ from torch import nn
 from videoanalyst.utils import Timer, move_data_to_device
 
 from ..trainer_base import TRACK_TRAINERS, TrainerBase
+# import pdb
 
 
 @TRACK_TRAINERS.register
@@ -84,6 +85,7 @@ class RegularTrainer(TrainerBase):
         self._state["print_str"] = ""
 
         time_dict = OrderedDict()
+        # pdb.set_trace()
         for iteration, _ in enumerate(pbar):
             self._state["iteration"] = iteration
             with Timer(name="data", output_dict=time_dict):

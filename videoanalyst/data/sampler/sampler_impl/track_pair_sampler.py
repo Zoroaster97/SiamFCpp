@@ -10,6 +10,7 @@ from videoanalyst.data.dataset.dataset_base import DatasetBase
 from videoanalyst.utils import load_image
 
 from ..sampler_base import TRACK_SAMPLERS, VOS_SAMPLERS, SamplerBase
+# import pdb
 
 
 @TRACK_SAMPLERS.register
@@ -69,6 +70,7 @@ class TrackPairSampler(SamplerBase):
         while self.data_filter(data1) or self.data_filter(data2):
             if is_negative_pair:
                 data1 = self._sample_track_frame()
+                # pdb.set_trace()s
                 data2 = self._sample_track_frame()
             else:
                 data1, data2 = self._sample_track_pair()
