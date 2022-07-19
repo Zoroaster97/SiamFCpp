@@ -1,6 +1,6 @@
 test:
   track:
-    exp_name: &TEST_NAME "s6k*"
+    exp_name: &TEST_NAME "s8k*"
     exp_save: &TEST_SAVE "logs"
     model:
       backbone:
@@ -20,7 +20,7 @@ test:
       task_model:
         name: "SiamTrack"
         SiamTrack:
-          pretrain_model_path: "snapshots/s6k*/epoch-0.pkl"
+          pretrain_model_path: "snapshots/s8k*/epoch-0.pkl"
     pipeline:
       name: "SiamFCppTracker"
       SiamFCppTracker:
@@ -52,7 +52,7 @@ test:
 train:
   track:
     # exp_name: &TRAIN_NAME "siamfcpp_alexnet-camdata5"
-    exp_name: &TRAIN_NAME "s6k*"
+    exp_name: &TRAIN_NAME "s8k*"
     exp_save: &TRAIN_SAVE "snapshots"
     num_processes: 1
     model:
@@ -104,7 +104,8 @@ train:
       sampler:
         name: "TrackPairSampler"
         TrackPairSampler:
-          negative_pair_ratio: 0.15 # 0.1
+          # negative_pair_ratio: 0.15 # 0.1
+          negative_pair_ratio: 0.0 # 0.1
         submodules:
           dataset:
             names: ["CamDataDataset",]
@@ -121,7 +122,8 @@ train:
               subset: "train"
             CamDataDataset:
               ratio: 1.0
-              max_diff: 100
+              # max_diff: 100
+              max_diff: 10
               dataset_root: "datasets/CamData"
               subset: "train"
           filter:

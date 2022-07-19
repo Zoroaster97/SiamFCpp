@@ -66,7 +66,9 @@ if __name__ == '__main__':
 
 
     ### loop
-    for i in range(parsed_args.start, parsed_args.end + 1):
+    # for i in range(parsed_args.start, parsed_args.end + 1):
+    for i in [1, 11, 15]:    # kx
+    # for i in [2, 3, 5, 6, 7, 8, 9, 10, 12, 13, 14, 16, 17, 18, 19, 20]:    # ky
         task_cfg = copy.deepcopy(meta_cfg)
         exp_name = task_cfg.exp_name.replace('*', str(i))
         task_cfg.exp_name = exp_name

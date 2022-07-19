@@ -76,7 +76,10 @@ if __name__ == '__main__':
     root_cfg = root_cfg.test
     task, task_cfg = specify_task(root_cfg)
     # task_cfg.freeze()
-    for i in range(parsed_args.start, parsed_args.end + 1):
+    # for i in range(parsed_args.start, parsed_args.end + 1):
+    # for i in [1, 11, 15]:    # kx
+    # for i in [2, 3, 5, 6]:    # ky
+    for i in [7, 8, 9, 10, 12, 13, 14, 16, 17, 18, 19, 20]:    # ky
         task_cfg_i = copy.deepcopy(task_cfg)
         exp_name = task_cfg_i.exp_name
         pretrain_model_path = task_cfg_i.model.task_model.SiamTrack.pretrain_model_path
