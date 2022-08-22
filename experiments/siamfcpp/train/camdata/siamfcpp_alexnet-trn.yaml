@@ -4,7 +4,7 @@ test:
     # exp_name: &TEST_NAME "siamfcpp_alexnet-camdata5-k2"
     # exp_name: &TEST_NAME "s6k4-eval"
     # exp_name: &TEST_NAME "s7k4-eval"
-    exp_name: &TEST_NAME "s8k4"
+    exp_name: &TEST_NAME "sstest"
     exp_save: &TEST_SAVE "logs"
     model:
       backbone:
@@ -27,7 +27,7 @@ test:
           # pretrain_model_path: "snapshots/siamfcpp_alexnet-camdata5/epoch-0.pkl"
           # pretrain_model_path: "snapshots/s6k4-eval/epoch-0.pkl"
           # pretrain_model_path: "snapshots/s7k4-eval/epoch-0.pkl"
-          pretrain_model_path: "snapshots/s8k4/epoch-0.pkl"
+          pretrain_model_path: "snapshots/sstest/epoch-0.pkl"
     pipeline:
       name: "SiamFCppTracker"
       SiamFCppTracker:
@@ -61,7 +61,7 @@ train:
     # exp_name: &TRAIN_NAME "siamfcpp_alexnet-camdata5"
     # exp_name: &TRAIN_NAME "s6k4-eval"
     # exp_name: &TRAIN_NAME "s7k4-eval"
-    exp_name: &TRAIN_NAME "s8k4"
+    exp_name: &TRAIN_NAME "sstest"
     exp_save: &TRAIN_SAVE "snapshots"
     num_processes: 1
     model:
@@ -97,7 +97,8 @@ train:
         name: "SiamTrack"
         SiamTrack:
           # pretrain_model_path: ""
-          pretrain_model_path: "models/siamfcpp/siamfcpp-alexnet-got-md5_5e01cf6271ad42e935032b61b05854d3.pkl"
+          # pretrain_model_path: "models/siamfcpp/siamfcpp-alexnet-got-md5_5e01cf6271ad42e935032b61b05854d3.pkl"
+          pretrain_model_path: "snapshots/s7k13/epoch-0.pkl"
 # ==================================================
     data:
       exp_name: *TRAIN_NAME
@@ -133,8 +134,8 @@ train:
               subset: "train"
             CamDataDataset:
               ratio: 1.0
-              # max_diff: 100
-              max_diff: 10
+              max_diff: 100
+              # max_diff: 10
               dataset_root: "datasets/CamData"
               subset: "train"
           filter:

@@ -306,6 +306,8 @@ class SiamFCppTracker(PipelineBase):
                                                axis=-1))
         if self._hyper_params["corr_fea_output"]:
             return target_pos, target_sz, self._state["corr_fea"]
+        # if self._state['pscore'] > 0.85:
+        #     self.init(im, track_rect)
         return track_rect
 
     # ======== tracking processes ======== #
